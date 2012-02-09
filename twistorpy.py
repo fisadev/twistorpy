@@ -115,7 +115,7 @@ def parse_all_pages(user, tweets):
 
 if __name__ == '__main__':
     if len(sys.argv) not in (3, 4):
-        print '''USE:
+        print '''USAGE:
 python twistory.py TWITTER_USER HISTORY_FILE_PATH [EXTRA_IDS_FILE_PATH]'
 
 HISTORY_FILE_PATH:
