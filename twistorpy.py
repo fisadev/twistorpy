@@ -25,7 +25,7 @@ def read_history(history_path):
     tweets = loads(history.read())
     history.close()
     print 'Done'
-    return tweets
+    return tweets or []
 
 @needs_history_file
 def backup_history(history_path):
