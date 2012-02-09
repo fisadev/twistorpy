@@ -62,7 +62,7 @@ def parse_ids_file(ids_path, tweets):
                     new_ids.append(_id)
                     print 'New id found:', _id
             except KeyboardInterrupt:
-                raise KeyboardInterrupt()
+                raise
             except:
                 print 'Error parsing line:'
                 print l
@@ -78,7 +78,7 @@ def parse_ids_file(ids_path, tweets):
                 if not tweet_present(t, tweets):
                     tweets.append(t)
             except KeyboardInterrupt:
-                raise KeyboardInterrupt()
+                raise
             except:
                 print 'Error getting tweet'
 
@@ -99,7 +99,7 @@ def parse_page(user, page, tweets):
             print 'Page is empty'
             return EMPTY
     except KeyboardInterrupt:
-        raise KeyboardInterrupt()
+        raise
     except:
         print 'Error reading page'
         return ERROR
