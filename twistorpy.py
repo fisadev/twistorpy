@@ -2,6 +2,7 @@
 #-*- coding: utf-8 -*-
 import os
 import sys
+import gzip
 import shutil
 from urllib2 import urlopen
 from json import loads, dumps
@@ -21,7 +22,10 @@ def needs_history_file(f):
 @needs_history_file
 def read_history(history_path):
     print 'Reading history file...'
-    history = open(history_path, 'r')
+    if os.path.splitext(history_path)[1] == '.gz':
+        history = gzip.open(history_path, 'rb')
+    else:
+        history = open(history_path, 'r')
     tweets = loads(history.read())
     history.close()
     print 'Done'
@@ -34,7 +38,10 @@ def backup_history(history_path):
     print 'Done'
 
 def save_history(tweets, history_path):
-    history = open(history_path, 'w')
+    if os.path.splitext(history_path)[1] == '.gz':
+        history = gzip.open(history_path, 'wb')
+    else:
+        history = open(history_path, 'w')
     history.write(dumps(tweets, indent=4))
     history.close()
 
