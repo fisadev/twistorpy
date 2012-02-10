@@ -25,7 +25,7 @@ def read_history(history_path):
     tweets = loads(history.read())
     history.close()
     print 'Done'
-    return tweets or []
+    return tweets
 
 @needs_history_file
 def backup_history(history_path):
@@ -131,7 +131,7 @@ and added to the history if they don't exist.
     user, history_path = sys.argv[1:3]
 
     backup_history(history_path)
-    tweets = read_history(history_path)
+    tweets = read_history(history_path) or []
 
     try:
         if len(sys.argv) == 4:
