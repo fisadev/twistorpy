@@ -140,6 +140,7 @@ and added to the history if they don't exist.
             save_history(tweets, history_path)
 
         parse_all_pages(user, tweets)
+        save_history(tweets, history_path)
 
     except KeyboardInterrupt:
         print 'Stopping and saving history file...'
