@@ -3,7 +3,7 @@ Twistorpy
 
 Twitter history backup tool
 
-Simple command-line tool / python module that allows to make a backup of the tweets of a twitter user on a json file. Limited to the newest 3200 tweets (twitter api limitation), plus those tweets of wich you know the tweet id. The user must have his tweets public.
+Simple command-line tool / python module that allows you to make a backup of the tweets of a twitter user on a json file. Limited to the newest 3200 tweets (twitter api limitation), plus those tweets of which you know the tweet id. The user must have his tweets public.
 
 Also, you can stop the running backup with ``Ctrl+c``, and the next time twistorpy will continue from the point it was stopped.
 
