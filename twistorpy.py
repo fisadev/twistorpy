@@ -132,6 +132,7 @@ if it already exists, only new tweets will be added to the file.
 EXTRA_IDS_FILE_PATH: (optional)
 You can create a txt file with tweets ids, and those tweets will be downloaded
 and added to the history if they don't exist.
+(each line of the file must be a different tweet id)
 '''
         sys.exit(1)
 
