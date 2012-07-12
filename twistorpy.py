@@ -123,7 +123,7 @@ def parse_all_pages(user, tweets):
 if __name__ == '__main__':
     if len(sys.argv) not in (3, 4):
         print '''USAGE:
-python twistorpy.py TWITTER_USER HISTORY_FILE_PATH [EXTRA_IDS_FILE_PATH]'
+python twistorpy.py TWITTER_USER HISTORY_FILE_PATH [EXTRA_IDS_FILE_PATH]
 
 HISTORY_FILE_PATH:
 Is the path for the json file. If the file doesn't exist, it will be created,
