@@ -10,14 +10,12 @@ Basic usage
 
 ``python twistorpy.py TWITTER_USER HISTORY_FILE_PATH [EXTRA_IDS_FILE_PATH]``
 
-HISTORY_FILE_PATH
------------------
+* **HISTORY_FILE_PATH**
 
 Is the path for the json file. If the file doesn't exist, it will be created,
 if it already exists, only new tweets will be added to the file.
 
-EXTRA_IDS_FILE_PATH (optional)
-------------------------------
+* **EXTRA_IDS_FILE_PATH (optional)**
 
 You can create a txt file with tweets ids, and those tweets will be downloaded
 and added to the history if they don't exist.
