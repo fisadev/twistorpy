@@ -113,10 +113,18 @@ def parse_page(user, page, tweets):
 
 def parse_all_pages(user, tweets):
     page = 1
+    retries = 0
     while True:
         result = parse_page(user, page, tweets)
         if result == OK:
             page += 1
+            retries = 0
+        elif result == ERROR:
+            if retries < 5:
+                retries += 1
+            else:
+                print 'Stopped after 5 errors with the same page'
+                break
         elif result == EMPTY:
             break
 
