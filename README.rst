@@ -1,3 +1,8 @@
+WARNING: Not working
+====================
+
+**Twitter has deprecated the 1.0 version of its API, and I hadn't have time to update the code. At this moment doesn't work :(**
+
 Twistorpy
 =========
 
