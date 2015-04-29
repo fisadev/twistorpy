@@ -4,7 +4,6 @@ import os
 import sys
 import gzip
 import shutil
-from urllib2 import urlopen
 from json import loads, dumps
 
 import tweepy
