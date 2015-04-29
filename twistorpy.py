@@ -7,9 +7,22 @@ import shutil
 from urllib2 import urlopen
 from json import loads, dumps
 
-TWEET_URL = 'https://api.twitter.com/1/statuses/show/%i.json'
-PAGE_URL = 'https://api.twitter.com/1/statuses/user_timeline.json?screen_name=%s&include_rts=true&count=%i&page=%i'
+import tweepy
+
+
+CONSUMER_KEY = ''
+CONSUMER_SECRET = ''
+ACCESS_TOKEN = ''
+ACCESS_TOKEN_SECRET = ''
+
+
+auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
+auth.set_access_token(ACCESS_TOKEN, ACCESS_TOKEN_SECRET)
+api = tweepy.API(auth)
+
+
 PAGE_LEN = 100
+
 
 def needs_history_file(f):
     def new_f(history_path):
@@ -18,6 +31,7 @@ def needs_history_file(f):
         else:
             print 'History file not found'
     return new_f
+
 
 @needs_history_file
 def read_history(history_path):
@@ -28,8 +42,9 @@ def read_history(history_path):
         history = open(history_path, 'r')
     tweets = loads(history.read())
     history.close()
-    print 'Done'
+    print 'Done. %i tweets in history.' % len(tweets)
     return tweets
+
 
 @needs_history_file
 def backup_history(history_path):
@@ -37,25 +52,35 @@ def backup_history(history_path):
     shutil.copy(history_path, history_path + '.bak')
     print 'Done'
 
+
 def save_history(tweets, history_path):
+    print 'Saving history file with %i tweets...' % len(tweets)
     if os.path.splitext(history_path)[1] == '.gz':
         history = gzip.open(history_path, 'wb')
     else:
         history = open(history_path, 'w')
     history.write(dumps(tweets, indent=4))
     history.close()
+    print 'Done'
+
 
 def get_tweet(_id):
-    return loads(urlopen(TWEET_URL % _id).read())
+    return api.get_status(_id)._json
+
 
 def get_page_tweets(user, page):
-    return loads(urlopen(PAGE_URL % (user, PAGE_LEN, page)).read())
+    return [tweet._json for tweet in api.user_timeline(user,
+                                                       count=PAGE_LEN,
+                                                       page=page)]
+
 
 def id_present(_id, tweets):
     return _id in [t2['id'] for t2 in tweets]
 
+
 def tweet_present(tweet, tweets):
     return id_present(tweet['id'], tweets)
+
 
 def parse_ids_file(ids_path, tweets):
     new_ids = []
@@ -76,7 +101,7 @@ def parse_ids_file(ids_path, tweets):
     ids_file.close()
 
     if new_ids:
-        print 'Getting new tweets...'
+        print 'Getting %i new tweets...' % len(new_ids)
 
         for _id in new_ids:
             try:
@@ -89,7 +114,9 @@ def parse_ids_file(ids_path, tweets):
             except:
                 print 'Error getting tweet'
 
+
 OK, EMPTY, ERROR = range(3)
+
 
 def parse_page(user, page, tweets):
     print 'Parsing new tweets from page', page, '...'
@@ -111,6 +138,7 @@ def parse_page(user, page, tweets):
         print 'Error reading page'
         return ERROR
 
+
 def parse_all_pages(user, tweets):
     page = 1
     retries = 0
@@ -127,6 +155,7 @@ def parse_all_pages(user, tweets):
                 break
         elif result == EMPTY:
             break
+
 
 if __name__ == '__main__':
     if len(sys.argv) not in (3, 4):
@@ -159,7 +188,7 @@ and added to the history if they don't exist.
         save_history(tweets, history_path)
 
     except KeyboardInterrupt:
-        print 'Stopping and saving history file...'
+        print 'Stopped by the user.'
         try:
             save_history(tweets, history_path)
         except:
