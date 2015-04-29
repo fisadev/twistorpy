@@ -94,9 +94,10 @@ def parse_ids_file(ids_path, tweets):
                     print 'New id found:', _id
             except KeyboardInterrupt:
                 raise
-            except:
+            except Exception as err:
                 print 'Error parsing line:'
                 print l
+                print str(err)
     ids_file.close()
 
     if new_ids:
@@ -110,8 +111,9 @@ def parse_ids_file(ids_path, tweets):
                     tweets.append(t)
             except KeyboardInterrupt:
                 raise
-            except:
+            except Exception as err:
                 print 'Error getting tweet'
+                print str(err)
 
 
 OK, EMPTY, ERROR = range(3)
@@ -133,8 +135,9 @@ def parse_page(user, page, tweets):
             return EMPTY
     except KeyboardInterrupt:
         raise
-    except:
+    except Exception as err:
         print 'Error reading page'
+        print str(err)
         return ERROR
 
 
@@ -190,8 +193,7 @@ and added to the history if they don't exist.
         print 'Stopped by the user.'
         try:
             save_history(tweets, history_path)
-        except:
+        except Exception as err:
             print 'Error saving history file, may be corrupted'
+            print str(err)
         sys.exit(0)
-
-
