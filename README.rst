@@ -1,8 +1,6 @@
 WARNING: Not working
 ====================
 
-**Twitter has deprecated the 1.0 version of its API, and I hadn't have time to update the code. At this moment doesn't work :(**
-
 Twistorpy
 =========
 
@@ -16,6 +14,18 @@ Also, you can stop the running backup with ``Ctrl+c``, and the backup won't be c
 
 Basic usage
 ===========
+
+First, register your app on `the twitter developers site <https://dev.twitter.com/>` and fill the settings on the ``twistorpy.py`` file:
+
+.. code::
+
+    CONSUMER_KEY = ''
+    CONSUMER_SECRET = ''
+    ACCESS_TOKEN = ''
+    ACCESS_TOKEN_SECRET = ''
+
+
+Then just run:
 
 ``python twistorpy.py TWITTER_USER HISTORY_FILE_PATH [EXTRA_IDS_FILE_PATH]``
 
