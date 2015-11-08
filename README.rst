@@ -15,7 +15,7 @@ Also, you can stop the running backup with ``Ctrl+c``, and the backup won't be c
 Basic usage
 ===========
 
-First, register your app on `the twitter developers site <https://dev.twitter.com/>` and fill the settings on the ``twistorpy.py`` file:
+First, register your app on `the twitter developers site <https://dev.twitter.com/>`_ and fill the settings on the ``twistorpy.py`` file:
 
 .. code::
 
