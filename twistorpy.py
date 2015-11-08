@@ -104,6 +104,9 @@ def parse_ids_file(ids_path, tweets):
         print 'Getting %i new tweets...' % len(new_ids)
 
         for _id in new_ids:
+            import time
+            import random
+            time.sleep(random.random())
             try:
                 print 'Adding tweet with id', _id
                 t = get_tweet(_id)
