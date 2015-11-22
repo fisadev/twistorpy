@@ -1,6 +1,3 @@
-WARNING: Not working
-====================
-
 Twistorpy
 =========
 
