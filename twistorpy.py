@@ -1,12 +1,13 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+
 import os
 import sys
 import gzip
 import shutil
 from json import loads, dumps
 import tweepy
-
 
 CONSUMER_KEY = ''
 CONSUMER_SECRET = ''
@@ -90,13 +91,13 @@ def parse_ids_file(ids_path, tweets):
                 _id = int(l)
                 if not id_present(_id, tweets):
                     new_ids.append(_id)
-                    print ('New id found:', _id)
+                    print('New id found:', _id)
             except KeyboardInterrupt:
                 raise
             except Exception as err:
-                print ('Error parsing line:')
-                print (l)
-                print (str(err))
+                print('Error parsing line:')
+                print(l)
+                print(str(err))
     ids_file.close()
 
     if new_ids:
@@ -107,15 +108,15 @@ def parse_ids_file(ids_path, tweets):
             import random
             time.sleep(random.random())
             try:
-                print ('Adding tweet with id', _id)
+                print('Adding tweet with id', _id)
                 t = get_tweet(_id)
                 if not tweet_present(t, tweets):
                     tweets.append(t)
             except KeyboardInterrupt:
                 raise
             except Exception as err:
-                print ('Error getting tweet')
-                print (str(err))
+                print('Error getting tweet')
+                print(str(err))
 
 
 OK, EMPTY, ERROR = range(3)
