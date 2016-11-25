@@ -5,7 +5,6 @@ import sys
 import gzip
 import shutil
 from json import loads, dumps
-
 import tweepy
 
 
@@ -28,39 +27,39 @@ def needs_history_file(f):
         if os.path.exists(history_path):
             return f(history_path)
         else:
-            print 'History file not found'
+            print ('History file not found')
     return new_f
 
 
 @needs_history_file
 def read_history(history_path):
-    print 'Reading history file...'
+    print ('Reading history file...')
     if os.path.splitext(history_path)[1] == '.gz':
         history = gzip.open(history_path, 'rb')
     else:
         history = open(history_path, 'r')
     tweets = loads(history.read())
     history.close()
-    print 'Done. %i tweets in history.' % len(tweets)
+    print ('Done. %i tweets in history.' % len(tweets))
     return tweets
 
 
 @needs_history_file
 def backup_history(history_path):
-    print 'Creating history backup...'
+    print ('Creating history backup...')    
     shutil.copy(history_path, history_path + '.bak')
-    print 'Done'
+    print ('Done')
 
 
 def save_history(tweets, history_path):
-    print 'Saving history file with %i tweets...' % len(tweets)
+    print ('Saving history file with %i tweets...' % len(tweets))
     if os.path.splitext(history_path)[1] == '.gz':
         history = gzip.open(history_path, 'wb')
     else:
         history = open(history_path, 'w')
     history.write(dumps(tweets, indent=4))
     history.close()
-    print 'Done'
+    print ('Done')
 
 
 def get_tweet(_id):
@@ -83,7 +82,7 @@ def tweet_present(tweet, tweets):
 
 def parse_ids_file(ids_path, tweets):
     new_ids = []
-    print 'Parsing ids from file...'
+    print('Parsing ids from file...')
     ids_file = open(ids_path, 'r')
     for l in ids_file.read().split('\n'):
         if l.strip():
@@ -91,39 +90,39 @@ def parse_ids_file(ids_path, tweets):
                 _id = int(l)
                 if not id_present(_id, tweets):
                     new_ids.append(_id)
-                    print 'New id found:', _id
+                    print ('New id found:', _id)
             except KeyboardInterrupt:
                 raise
             except Exception as err:
-                print 'Error parsing line:'
-                print l
-                print str(err)
+                print ('Error parsing line:')
+                print (l)
+                print (str(err))
     ids_file.close()
 
     if new_ids:
-        print 'Getting %i new tweets...' % len(new_ids)
+        print ('Getting %i new tweets...' % len(new_ids))
 
         for _id in new_ids:
             import time
             import random
             time.sleep(random.random())
             try:
-                print 'Adding tweet with id', _id
+                print ('Adding tweet with id', _id)
                 t = get_tweet(_id)
                 if not tweet_present(t, tweets):
                     tweets.append(t)
             except KeyboardInterrupt:
                 raise
             except Exception as err:
-                print 'Error getting tweet'
-                print str(err)
+                print ('Error getting tweet')
+                print (str(err))
 
 
 OK, EMPTY, ERROR = range(3)
 
 
 def parse_page(user, page, tweets):
-    print 'Parsing new tweets from page', page, '...'
+    print ('Parsing new tweets from page', page, '...')
     try:
         page_tweets = get_page_tweets(user, page)
         if page_tweets:
@@ -131,16 +130,16 @@ def parse_page(user, page, tweets):
             for t in page_tweets:
                 if not tweet_present(t, tweets):
                     tweets.append(t)
-            print 'Added', len(tweets) - original_count, 'new tweets'
+            print ('Added', len(tweets) - original_count, 'new tweets')
             return OK
         else:
-            print 'Page is empty'
+            print ('Page is empty')
             return EMPTY
     except KeyboardInterrupt:
         raise
     except Exception as err:
-        print 'Error reading page'
-        print str(err)
+        print ('Error reading page')
+        print (str(err))
         return ERROR
 
 
@@ -156,7 +155,7 @@ def parse_all_pages(user, tweets):
             if retries < 5:
                 retries += 1
             else:
-                print 'Stopped after 5 errors with the same page'
+                print ('Stopped after 5 errors with the same page')
                 break
         elif result == EMPTY:
             break
@@ -164,7 +163,7 @@ def parse_all_pages(user, tweets):
 
 if __name__ == '__main__':
     if len(sys.argv) not in (3, 4):
-        print '''USAGE:
+        print ('''USAGE:
 python twistorpy.py TWITTER_USER HISTORY_FILE_PATH [EXTRA_IDS_FILE_PATH]
 
 HISTORY_FILE_PATH:
@@ -175,7 +174,7 @@ EXTRA_IDS_FILE_PATH: (optional)
 You can create a txt file with tweets ids, and those tweets will be downloaded
 and added to the history if they don't exist.
 (each line of the file must be a different tweet id)
-'''
+''')
         sys.exit(1)
 
     user, history_path = sys.argv[1:3]
@@ -193,10 +192,10 @@ and added to the history if they don't exist.
         save_history(tweets, history_path)
 
     except KeyboardInterrupt:
-        print 'Stopped by the user.'
+        print ('Stopped by the user.')
         try:
             save_history(tweets, history_path)
         except Exception as err:
-            print 'Error saving history file, may be corrupted'
-            print str(err)
+            print ('Error saving history file, may be corrupted')
+            print (str(err))
         sys.exit(0)
