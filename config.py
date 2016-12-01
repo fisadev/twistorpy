@@ -11,4 +11,4 @@ CONSUMER_KEY = ''
 CONSUMER_SECRET = ''
 ACCESS_TOKEN = ''
 ACCESS_TOKEN_SECRET = ''
-
+CONNECT_STRING = ''  # Reference: 	http://docs.sqlalchemy.org/en/latest/core/engines.html
