@@ -30,6 +30,7 @@ class Twit(Base):
     @classmethod
     def save_twit(klass, ref_twit):
         user = sess.query(User).filter_by(id=ref_twit.user.id).first()
+        # TODO this does not update existing users, which can change
         if not user:
             user = User(
                 id=ref_twit.user.id,
@@ -58,6 +59,7 @@ class Twit(Base):
         for u_mention in ref_twit.entities['user_mentions']:
             mentioned_user = sess.query(User).filter_by(id=u_mention['id']).first()
             if not mentioned_user:
+                # TODO refactor into function
                 mentioned_user = User(
                     id=u_mention['id'],
                     screen_name=u_mention['screen_name'],
