@@ -10,6 +10,7 @@ from json import loads, dumps
 import tweepy
 
 from config import CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN, ACCESS_TOKEN_SECRET
+from models import Tweet, sess
 
 PAGE_LEN = 100
 
@@ -31,19 +32,13 @@ class Twistorpy(object):
         """ retrive page with PAGE_LEN tweets"""
         return [t._json for t in self.api.user_timeline(self.user, count=PAGE_LEN, page=page)]
 
-
-    #def id_present(self, _id,tweets):
-    #return _id in [t2['id'] for t2 in tweets]
-    #def tweet_present(tweet, tweets):
-    #    return id_present(tweet['id'], tweets)
-
-    def id_present(self,  id):
+    def id_present(self, id_):
         """ TODO: DB strucure must be defined before complete this method """
-        return False
+        return sess.query(Tweet).filter_by(id=id_)
 
     def tweet_present(self, tweet):
         """ TODO: DB strucure must be defined before complete this method """
-        return False
+        return self.id_present(tweet['id'])
 
     def parse_ids_file(self,ids_path):
         """ Obtaining tweets corresponding to the ids in the given file """
@@ -76,7 +71,7 @@ class Twistorpy(object):
                     print('Adding tweet with id', _id)
                     tweet = self.get_tweet(_id)
                     if not self.tweet_present(tweet):
-                        tweets.append(tweet)
+                        Tweet.save_tweet(tweet)
                 except KeyboardInterrupt:
                     raise
                 except Exception as err:
@@ -95,7 +90,7 @@ class Twistorpy(object):
                 original_count = len(tweets)
                 for t in page_tweets:
                     if not self.tweet_present(t):
-                        tweets.append(t)
+                        Tweet.save_tweet(tweet)
                 print('Added', len(tweets) - original_count, 'new tweets')
                 return OK
             else:
