@@ -16,47 +16,47 @@ sess = Session()
 Base = declarative_base()
 
 
-class Twit(Base):
-    __tablename__ = 'twits'
+class Tweet(Base):
+    __tablename__ = 'tweets'
 
     id = Column(BigInteger, primary_key=True)
     user = Column(BigInteger, ForeignKey("users.id", ondelete='CASCADE'), nullable=False)
-    twit_data = Column(Text(convert_unicode=True))
+    tweet_data = Column(Text(convert_unicode=True))
     text = Column(String(length=500, convert_unicode=True))
     date = Column(DateTime)
     in_reply_to_id = Column(BigInteger)
-    retwit_id = Column(BigInteger)
+    retweet_id = Column(BigInteger)
 
     @classmethod
-    def save_twit(klass, ref_twit):
-        user = sess.query(User).filter_by(id=ref_twit.user.id).first()
+    def save_tweet(klass, ref_tweet):
+        user = sess.query(User).filter_by(id=ref_tweet.user.id).first()
         # TODO this does not update existing users, which can change
         if not user:
             user = User(
-                id=ref_twit.user.id,
-                screen_name=ref_twit.user.screen_name,
-                name=ref_twit.user.name,
-                profile_image=ref_twit.user.profile_image_url_https
+                id=ref_tweet.user.id,
+                screen_name=ref_tweet.user.screen_name,
+                name=ref_tweet.user.name,
+                profile_image=ref_tweet.user.profile_image_url_https
             )
             sess.add(user)
             sess.commit()
 
-        twit = sess.query(Twit).filter_by(id=ref_twit.id).first()
-        if not twit:
-            twit = klass(
-                id=ref_twit.id,
+        tweet = sess.query(Tweet).filter_by(id=ref_tweet.id).first()
+        if not tweet:
+            tweet = klass(
+                id=ref_tweet.id,
                 user=user.id,
-                twit_data=json.dumps(ref_twit._json),
-                text=ref_twit.text,
-                date=ref_twit.created_at
+                tweet_data=json.dumps(ref_tweet._json),
+                text=ref_tweet.text,
+                date=ref_tweet.created_at
             )
-            twit.in_reply_to_id = ref_twit.in_reply_to_status_id
-            if hasattr(ref_twit, 'retweeted_status'):
-                twit.retwit_id = ref_twit.retweeted_status.id
-            sess.add(twit)
+            tweet.in_reply_to_id = ref_tweet.in_reply_to_status_id
+            if hasattr(ref_tweet, 'retweeted_status'):
+                tweet.retweet_id = ref_tweet.retweeted_status.id
+            sess.add(tweet)
             sess.commit()
 
-        for u_mention in ref_twit.entities['user_mentions']:
+        for u_mention in ref_tweet.entities['user_mentions']:
             mentioned_user = sess.query(User).filter_by(id=u_mention['id']).first()
             if not mentioned_user:
                 # TODO refactor into function
@@ -69,7 +69,7 @@ class Twit(Base):
                 sess.commit()
 
             mention = Mention(
-                twit=twit.id,
+                tweet=tweet.id,
                 user=user.id,
                 user_mentioned=mentioned_user.id
             )
@@ -90,6 +90,6 @@ class Mention(Base):
     __tablename__ = 'mentions'
 
     id = Column(BigInteger, primary_key=True)
-    twit = Column(BigInteger, ForeignKey("twits.id", ondelete='CASCADE'), nullable=True)
+    tweet = Column(BigInteger, ForeignKey("tweets.id", ondelete='CASCADE'), nullable=True)
     user = Column(BigInteger, ForeignKey("users.id", ondelete='CASCADE'), nullable=True)
     user_mentioned = Column(BigInteger, ForeignKey("users.id", ondelete='CASCADE'), nullable=True)
